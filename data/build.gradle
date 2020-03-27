@@ -1,0 +1,50 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+def supportDependencies = rootProject.ext.supportDependencies
+def config = rootProject.ext.android
+
+android {
+    compileSdkVersion config.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //网络请求
+    implementation  thirdDependencies.rxJava
+    implementation  thirdDependencies.rxAndroid
+    implementation  thirdDependencies.retrofit
+    implementation  thirdDependencies.gson
+    implementation  thirdDependencies.rxJavaAdapter
+    implementation  thirdDependencies.retrofitConverterGson
+    implementation  thirdDependencies.okhttpLoggingInterceptor
+    implementation  thirdDependencies.timber
+    implementation  thirdDependencies.eventbus
+
+    // aac 生命周期管理
+    implementation thirdDependencies.lifecycle
+    implementation thirdDependencies.viewmodel
+    implementation thirdDependencies.livedata
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
+}

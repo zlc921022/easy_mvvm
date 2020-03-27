@@ -1,0 +1,2 @@
+include ':app', ':base', ':data'
+rootProject.name='easy_mvvm'

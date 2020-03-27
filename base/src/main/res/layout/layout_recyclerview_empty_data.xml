@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/b_empty_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:visibility="visible"
+              android:background="@color/colorBodyBackground">
+
+    <TextView
+        android:id="@+id/tv_error_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text=""
+        android:textColor="@color/textColorTertiary"
+        android:textSize="@dimen/sp_14"
+        android:minWidth="@dimen/dp_100"
+        android:minHeight="@dimen/dp_100"/>
+</LinearLayout>

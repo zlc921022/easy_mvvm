@@ -1,0 +1,68 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+def supportDependencies = rootProject.ext.supportDependencies
+def thirdDependencies = rootProject.ext.thirdDependencies
+def config = rootProject.ext.android
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    defaultConfig {
+        applicationId "com.xiaochen.easy_mvvm"
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        flavorDimensions "mvvm"
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.javaVersion
+        targetCompatibility rootProject.ext.javaVersion
+    }
+
+
+    productFlavors {
+        vTest{
+            dimension "mvvm"
+        }
+
+        vDev{
+            dimension "mvvm"
+        }
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation supportDependencies.supportV4
+    implementation supportDependencies.supportAppcompat
+    implementation supportDependencies.multidex
+    implementation supportDependencies.constraintLayout
+
+    implementation project(':base')
+    implementation project(':data')
+
+
+    // aac 生命周期管理
+    implementation thirdDependencies.lifecycle
+    implementation thirdDependencies.viewmodel
+    implementation thirdDependencies.livedata
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0-rc03"
+
+}
