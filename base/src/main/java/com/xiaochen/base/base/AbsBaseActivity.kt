@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import com.xiaochen.base.dialog.LoadingDialog
+import com.xiaochen.base.utils.LoadingManager
 import com.xiaochen.base.utils.LogUtil
 import com.xiaochen.base.viewmodel.BaseViewModel
 
@@ -15,9 +15,8 @@ import com.xiaochen.base.viewmodel.BaseViewModel
 abstract class AbsBaseActivity<T : BaseViewModel> : AppCompatActivity(), BaseUI {
 
     var mViewModel: T? = null
-    var loading: LoadingDialog? = null
     val tag: String? = javaClass.simpleName
-    var isShowLoading: Boolean? = false
+    var isShowLoading: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,13 +26,8 @@ abstract class AbsBaseActivity<T : BaseViewModel> : AppCompatActivity(), BaseUI 
         initListener()
     }
 
-    /**
-     * 初始化View
-     */
     override fun initView() {
-        if (isShowLoading == true) {
-            loading = LoadingDialog.getLoading(this)
-        }
+
     }
 
     /**
@@ -42,10 +36,11 @@ abstract class AbsBaseActivity<T : BaseViewModel> : AppCompatActivity(), BaseUI 
     override fun initData() {
         // 创建ViewModel
         mViewModel = createViewModel()
+        if (isShowLoading) {
+            mViewModel?.bindLoading(LoadingManager.getLoading(this))
+        }
         // 异常统一处理
         exceptionDispose()
-        // loading统一处理
-        loadingDispose()
     }
 
     /**
@@ -60,24 +55,6 @@ abstract class AbsBaseActivity<T : BaseViewModel> : AppCompatActivity(), BaseUI 
     }
 
     /**
-     * loading统一处理
-     */
-    private fun loadingDispose() {
-        mViewModel?.run {
-            this.mLoadingLiveData.observe(this@AbsBaseActivity, Observer {
-                if (isShowLoading == false) {
-                    return@Observer
-                }
-                if (it == true) {
-                    this@AbsBaseActivity.showLoading()
-                } else {
-                    this@AbsBaseActivity.dismissLoading()
-                }
-            })
-        }
-    }
-
-    /**
      * 获取布局id
      */
     abstract fun getLayoutId(): Int
@@ -85,20 +62,8 @@ abstract class AbsBaseActivity<T : BaseViewModel> : AppCompatActivity(), BaseUI 
     /**
      * 创建 ViewModel对象
      */
-    abstract fun createViewModel(): T
-
-    /**
-     * 显示loading
-     */
-    fun showLoading() {
-        loading?.show()
-    }
-
-    /**
-     * 关闭loading
-     */
-    fun dismissLoading() {
-        loading?.dismiss()
+    open fun createViewModel(): T? {
+        return null
     }
 
     /**

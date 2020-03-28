@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.xiaochen.base.dialog.LoadingDialog
+import com.xiaochen.base.utils.LoadingManager
 import com.xiaochen.base.utils.LogUtil
 import com.xiaochen.base.viewmodel.BaseViewModel
 
@@ -20,8 +20,7 @@ abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
     lateinit var mView: View
     var mContext: Context? = null
     var mViewModel: T? = null
-    var loading: LoadingDialog? = null
-    var isShowLoading: Boolean? = false
+    var isShowLoading: Boolean = false
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -44,26 +43,16 @@ abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
     }
 
     /**
-     * 初始化View
-     */
-    override fun initView() {
-        if (isShowLoading == true) {
-            mContext?.run {
-                loading = LoadingDialog.getLoading(this)
-            }
-        }
-    }
-
-    /**
      * 加载数据方法
      */
     override fun initData() {
         // 创建ViewModel
         mViewModel = createViewModel()
+        if (isShowLoading && mContext != null) {
+            mViewModel?.bindLoading(LoadingManager.getLoading(mContext!!))
+        }
         // 异常统一处理
         exceptionDispose()
-        // loading统一处理
-        loadingDispose()
     }
 
     /**
@@ -78,24 +67,6 @@ abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
     }
 
     /**
-     * loading统一处理
-     */
-    private fun loadingDispose() {
-        mViewModel?.run {
-            this.mLoadingLiveData.observe(this@AbsBaseFragment, Observer {
-                if (isShowLoading == false) {
-                    return@Observer
-                }
-                if (it == true) {
-                    this@AbsBaseFragment.showLoading()
-                } else {
-                    this@AbsBaseFragment.dismissLoading()
-                }
-            })
-        }
-    }
-
-    /**
      * 获取布局id
      */
     abstract fun getLayoutId(): Int
@@ -103,20 +74,8 @@ abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
     /**
      *创建 ViewModel对象
      */
-    abstract fun createViewModel(): T
-
-    /**
-     * 显示loading
-     */
-    fun showLoading() {
-        loading?.show()
-    }
-
-    /**
-     * 关闭loading
-     */
-    fun dismissLoading() {
-        loading?.dismiss()
+    open fun createViewModel(): T? {
+        return null
     }
 
     /**

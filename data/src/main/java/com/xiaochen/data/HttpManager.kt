@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * <p>http网络请求提供类</p >
  * @author     zhenglecheng
  */
-object HttpProvider {
+object HttpManager {
 
     private var mBaseUrl = BASE_URL
     private var isDebug = IS_DEBUG

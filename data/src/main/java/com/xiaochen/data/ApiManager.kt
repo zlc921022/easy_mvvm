@@ -6,7 +6,7 @@ package com.xiaochen.data
  */
 object ApiManager {
 
-    private var mHttpProvider = HttpProvider
+    private var mHttpProvider = HttpManager
 
     /**
      * 获得api接口对象

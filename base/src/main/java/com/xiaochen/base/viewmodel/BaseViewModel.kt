@@ -3,6 +3,8 @@ package com.xiaochen.base.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.xiaochen.base.dialog.LoadingDialog
+import com.xiaochen.base.utils.LoadingManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,14 +16,11 @@ import kotlinx.coroutines.withContext
  */
 open class BaseViewModel : ViewModel() {
 
+    var loadingDialog: LoadingDialog? = null
     /**
      * 统一异常处理liveData
      */
     val mExceptionLiveData: MutableLiveData<Exception> = MutableLiveData()
-    /**
-     * 统一loading处理liveData
-     */
-    val mLoadingLiveData: MutableLiveData<Boolean> = MutableLiveData()
 
     /**
      * ui线程中执行
@@ -68,13 +67,25 @@ open class BaseViewModel : ViewModel() {
      * 显示loading
      */
     fun showLoading() {
-        mLoadingLiveData.value = true
+        loadingDialog?.show()
     }
 
     /**
      * 关闭loading
      */
     fun dismissLoading() {
-        mLoadingLiveData.value = false
+        loadingDialog?.dismiss()
+    }
+
+    /**
+     * 绑定loading
+     */
+    fun bindLoading(loading: LoadingDialog) {
+        this.loadingDialog = loading
+    }
+
+    override fun onCleared() {
+        LoadingManager.dismiss()
+        super.onCleared()
     }
 }
