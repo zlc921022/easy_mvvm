@@ -23,9 +23,9 @@ object LoadingManager {
     }
 
     fun dismiss() {
-        if (mLoading != null) {
+        if (mLoading?.isShowing == true) {
             mLoading?.dismiss()
-            mLoading = null
         }
+        mLoading = null
     }
 }
