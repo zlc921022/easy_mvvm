@@ -6,20 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import com.xiaochen.base.utils.LoadingManager
-import com.xiaochen.base.utils.LogUtil
-import com.xiaochen.base.viewmodel.BaseViewModel
 
 /**
  * <p>抽象的父类activity 所有activity继承当前类</p >
  * @author     zhenglecheng
  */
-abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
+abstract class AbsBaseFragment : Fragment(), View.OnClickListener {
 
-    lateinit var mView: View
+    var mView: View? = null
     var mContext: Context? = null
-    var mViewModel: T? = null
     var isShowLoading: Boolean = false
 
     override fun onAttach(context: Context?) {
@@ -32,51 +27,43 @@ abstract class AbsBaseFragment<T : BaseViewModel> : Fragment(), BaseUI {
         savedInstanceState: Bundle?
     ): View {
         mView = inflater.inflate(getLayoutId(), container, false)
-        initView()
-        return mView
+        return mView!!
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        initData()
-        initListener()
+        mView?.let {
+            initView(mView)
+            initData()
+            initListener()
+        }
+    }
+
+    /**
+     * 控件初始化
+     */
+    open fun initView(view: View?) {
+
     }
 
     /**
      * 加载数据方法
      */
-    override fun initData() {
-        // 创建ViewModel
-        mViewModel = createViewModel()
-        if (isShowLoading && mContext != null) {
-            mViewModel?.bindLoading(LoadingManager.getLoading(mContext!!))
-        }
-        // 异常统一处理
-        exceptionDispose()
+    open fun initData() {
+
     }
 
     /**
-     * 异常统一处理
+     * 点击事件监听
      */
-    private fun exceptionDispose() {
-        mViewModel?.run {
-            this.mExceptionLiveData.observe(this@AbsBaseFragment, Observer {
-                LogUtil.e("tag 报错了", it.message + "")
-            })
-        }
+    open fun initListener() {
+
     }
 
     /**
      * 获取布局id
      */
     abstract fun getLayoutId(): Int
-
-    /**
-     *创建 ViewModel对象
-     */
-    open fun createViewModel(): T? {
-        return null
-    }
 
     /**
      * 点击事件

@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.xiaochen.base.dialog.LoadingDialog
-import com.xiaochen.base.utils.LoadingManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -85,7 +84,7 @@ open class BaseViewModel : ViewModel() {
     }
 
     override fun onCleared() {
-        LoadingManager.dismiss()
+        dismissLoading()
         super.onCleared()
     }
 }
